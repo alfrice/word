@@ -41,9 +41,7 @@ public class WordControllerIntegrationTest {
 
     @Test(expected = WordException.class)
     public void testBadWord() {
-
         controller.convertNumberString("24677,,-87");
-
     }
 
     @Test
@@ -52,10 +50,7 @@ public class WordControllerIntegrationTest {
         String[] goodValues = new String[]{"246777", "1.5", ".25", "0.25", "456,789,999,999", ".25e12", "-42,999555", "0"};
 
         final Map<String, String> value = controller.convertNumberStrings(goodValues);
-        Arrays.stream(goodValues).forEach(t -> {
-            assertTrue(value.containsKey(t));
-        });
-        log.info("{}", goodValues);
+        Arrays.stream(goodValues).forEach(t -> assertTrue(value.containsKey(t)));
 
     }
 
@@ -65,10 +60,7 @@ public class WordControllerIntegrationTest {
         String[] goodValues = new String[]{"Poo!", "f*&^@!", ".2-5", "=.25", "456,789,999.999", ".dam!", "sheesh", "Zero"};
 
         final Map<String, String> value = controller.convertNumberStrings(goodValues);
-        Arrays.stream(goodValues).forEach(t -> {
-            assertTrue(value.containsKey(t));
-        });
-        log.info("{}", goodValues);
+        Arrays.stream(goodValues).forEach(t -> assertTrue(value.containsKey(t)));
 
     }
 

@@ -13,7 +13,7 @@ import java.util.Map;
 public class LRUCache extends LinkedHashMap{
 
 
-    final long capacity;
+    private final long capacity;
     public LRUCache(int capacity) {
 
         super(capacity, 1.1f, true);

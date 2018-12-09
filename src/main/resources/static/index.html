@@ -56,7 +56,7 @@
         </div>
 
     </form>
-    <p/>
+    <p></p>
     <p id="result" ></p>
 
 
@@ -87,7 +87,7 @@
         request.onerror=function(ev){
             console.log("ferom error: "+ev);
             showMessage(ev, false);
-        }
+        };
         request.send();
 
 
@@ -96,7 +96,7 @@
 
     function showMessage(message, good){
 
-        var html = '<br/><span style="color:green"> RESULT: </span><br/>'
+        var html = '<br/><span style="color:green"> RESULT: </span><br/>';
         if (!good) {
             html = '<br/><span style="color:red"> ERROR: </span><br/>';
         }

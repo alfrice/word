@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.github.alfrice.word.util.WordNumberConstants.enties;
-import static com.github.alfrice.word.util.WordNumberConstants.illions;
+import static com.github.alfrice.word.util.WordNumberConstants.numberQualifiers;
 import static com.github.alfrice.word.util.WordNumberConstants.ones;
 
 /**
@@ -33,7 +33,7 @@ public class WordService {
 
     static HashMap<String, String> cache;
 
-    private final String HUNDRED = "Hundred and ";
+    private final String HUNDRED = "Hundred ";
 
     @Autowired
     public WordService(HashMap<String, String> lruCache) {
@@ -70,7 +70,7 @@ public class WordService {
     }
 
     /**
-     * Validates and converts a single numberstring
+     * Validates and converts a single string as number
      *
      * @param numString the number string, like '100,000'
      * @return The string phrase for that number or the error message.
@@ -95,7 +95,7 @@ public class WordService {
 
             if (chunks.length > 0 || characterized.isFloatingPoint()) {
 
-                List<String> phrases = Arrays.stream(chunks).map(t -> toWords(t)).collect(Collectors.toList());
+                List<String> phrases = Arrays.stream(chunks).map(this::toWords).collect(Collectors.toList());
 
                 compilePhrases(phrases, resultBuilder);
 
@@ -123,7 +123,7 @@ public class WordService {
     /**
      * Cleans up any trailing commas etc.
      *
-     * @param resultBuilder Stringbuilder of number word phrase
+     * @param resultBuilder {@link StringBuilder} of number word phrase
      */
     private void cleanUp(StringBuilder resultBuilder) {
 
@@ -135,7 +135,7 @@ public class WordService {
     }
 
     /**
-     * Adds qualifying words for negartives and floating point, plus the floating point values
+     * Adds qualifying words for negatives and floating point, plus the floating point values
      *
      * @param characterized The {@link NumberCharacterizer} to be processed
      * @param resultBuilder The StringBuilder to use for processing
@@ -150,7 +150,7 @@ public class WordService {
     }
 
     /**
-     * Iterates over the processed phrases (up to three letters) and applies quanitifers,<br/>
+     * Iterates over the processed phrases (up to three letters) and applies quanitifiers,<br/>
      * such a <i>Million</i>, <i>thousands</i>, etc
      *
      * @param phrases A list of phrases that make up a complete number. <br/>
@@ -162,7 +162,7 @@ public class WordService {
 
         for (int i = 0; i < phrases.size(); i++) {
             String phrase = phrases.get(i);
-            String suffix = illions[--cur];
+            String suffix = numberQualifiers[--cur];
 
             if (StringUtils.isNotEmpty(phrase)) {
                 builder.append(phrases.get(i)).append(suffix);
@@ -174,10 +174,10 @@ public class WordService {
     }
 
     /**
-     * Retrieves an existing epression for three letter number strings or creates them.
+     * Retrieves an existing expression for three letter number strings or creates them.
      *
      * @param chunk A three letter number string such as <i>124</i>
-     * @returnb The word expression of the three letter number such as <i>One Hundred Twenty Three</i>
+     * @return The word expression of the three letter number such as <i>One Hundred Twenty Three</i>
      */
     private String toWords(String chunk) {
         if (wordMap.containsKey(chunk)) {
@@ -198,8 +198,8 @@ public class WordService {
      */
     private StringBuilder getDigits(char[] digits) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < digits.length; i++) {
-            int num = (digits[i] - '0');
+        for (char digit : digits) {
+            int num = (digit - '0');
             if (num == 0) {
                 builder.append("Zero ");
             } else {
@@ -216,7 +216,7 @@ public class WordService {
      * @param chunk A three letter number string
      * @return the word expression of <i>chunk</i>
      */
-    String chunkToWords(String chunk) {
+    private String chunkToWords(String chunk) {
         int[] numbers = getNumbers(chunk.toCharArray());
 
         StringBuilder builder = new StringBuilder();
@@ -236,15 +236,18 @@ public class WordService {
     }
 
     /**
-     * For three letter numbers, adds a single digit epression plus {@link WordService#HUNDRED}
+     * For three letter numbers, adds a single digit expression plus {@link WordService#HUNDRED}
      *
      * @param builder The builder with which to process
      * @param first The first letter of the three letter number
      * @param end The last two letters of the three letter number
      */
-    void getHundred(StringBuilder builder, int first, String end) {
+    private void getHundred(StringBuilder builder, int first, String end) {
         if (first > 0) {
             builder.append(ones[first]).append(HUNDRED);
+            if (!end.equals("00")){
+                builder.append("and ");
+            }
         }
 
         if (wordMap.containsKey(end)) {
@@ -254,20 +257,18 @@ public class WordService {
         }
     }
 
-    void getEnties(StringBuilder builder, int[] numbers) {
+    private void getEnties(StringBuilder builder, int[] numbers) {
 
         builder.append(enties[numbers[0]]).append(ones[numbers[1]]);
 
     }
 
-
-    int[] getNumbers(char[] chars) {
+    private int[] getNumbers(char[] chars) {
         int[] numbs = new int[chars.length];
         for (int i = 0; i < chars.length; i++) {
             numbs[i] = chars[i] - '0';
         }
         return numbs;
     }
-
 
 }

@@ -5,7 +5,6 @@ import com.github.alfrice.word.error.WordException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -16,14 +15,14 @@ import static org.junit.Assert.*;
  * Developer: alice.martin
  * Date: 12/2/18
  * Time: 2:57 PM
- * Description: Excercises the worderater service
+ * Description: Exercises the word service
  */
 @SuppressWarnings("unchecked")
 @Slf4j
 public class WordServiceTest {
 
-    LRUCache cache = new LRUCache(100);
-    WordService wordService = new WordService(cache);
+    private final LRUCache cache = new LRUCache(100);
+    private final WordService wordService = new WordService(cache);
 
     @Before
     public void init() {
@@ -36,6 +35,11 @@ public class WordServiceTest {
         String str = "10.6e25";
         Map<String, String> map =  wordService.convert(new String[]{str});
         assertEquals("One Hundred and Six Septillion", map.get(str));
+        String[] strings = new String[]{"427234567800", ".427234567800e12"};
+
+        map = wordService.convert(strings);
+
+        assertEquals(map.get(strings[0]), map.get(strings[1]));
     }
 
     @Test(expected = WordException.class)
@@ -53,6 +57,10 @@ public class WordServiceTest {
         String str = "427";
         Map<String, String> map =  wordService.convert(new String[]{str});
         assertEquals("Four Hundred and Twenty Seven ", map.get(str));
+
+        str+=",234,567,800";
+        map =  wordService.convert(new String[]{str});
+        assertEquals("Four Hundred and Twenty Seven billion, Two Hundred and Thirty Four Million, Five Hundred and Sixty Seven Thousand, Eight Hundred ", map.get(str));
     }
 
     @Test(expected = WordException.class)
@@ -83,7 +91,7 @@ public class WordServiceTest {
 
 
     @Test
-    public void testgiantFloatingPoint() {
+    public void testGiantFloatingPoint() {
         String[] list = new String[]{"2,147,483,647.44556677"};
         Map<String, String> map =  wordService.convert(new String[]{"2,147,483,647.44556677"});
         Arrays.stream(list).forEach(t->{
@@ -102,7 +110,7 @@ public class WordServiceTest {
     @Test
     public void testConvertRealBig() {
         String result =  wordService.convertSingle("1233300002045487878787878787878787800000000");
-        assertEquals("One Tredecillion, Two Hundred and Thirty Three Duodecillion, Three Hundred and Undecillion, Two Decillion, Forty Five Nonillion, Four Hundred and Eighty Seven Octillion, Eight Hundred and Seventy Eight Septillion, Seven Hundred and Eighty Seven Sextillion, Eight Hundred and Seventy Eight Quintillion, Seven Hundred and Eighty Seven Quadrillion, Eight Hundred and Seventy Eight Trillion, Seven Hundred and Eighty Seven billion, Eight Hundred and Million", result);
+        assertEquals("One Tredecillion, Two Hundred and Thirty Three Duodecillion, Three Hundred Undecillion, Two Decillion, Forty Five Nonillion, Four Hundred and Eighty Seven Octillion, Eight Hundred and Seventy Eight Septillion, Seven Hundred and Eighty Seven Sextillion, Eight Hundred and Seventy Eight Quintillion, Seven Hundred and Eighty Seven Quadrillion, Eight Hundred and Seventy Eight Trillion, Seven Hundred and Eighty Seven billion, Eight Hundred Million", result);
     }
 
     @Test
@@ -130,9 +138,7 @@ public class WordServiceTest {
         Map<String, String> result = wordService.convert(strings);
         assertTrue(result.size() == 1000);
 
-        Arrays.stream(strings).forEach(t -> {
-            assertTrue(wordService.wordMap.containsKey(t));
-        });
+        Arrays.stream(strings).forEach(t -> assertTrue(wordService.wordMap.containsKey(t)));
 
     }
 

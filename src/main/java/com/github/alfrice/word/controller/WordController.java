@@ -2,11 +2,10 @@ package com.github.alfrice.word.controller;
 
 import com.github.alfrice.word.error.WordException;
 import com.github.alfrice.word.service.WordService;
-import com.github.alfrice.word.util.wordConstants;
+import com.github.alfrice.word.util.WordConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,16 +30,17 @@ import java.util.Map;
 @Slf4j
 public class WordController {
 
-    @Autowired
-    private WordService service;
+    private final WordService service;
 
     @Value("${spring.application.name}")
     String appName;
 
+    @Autowired
+    public WordController(WordService service) {this.service = service;}
 
     @RequestMapping(value = "**/help", method = RequestMethod.GET)
     public String help() {
-        return wordConstants.HELP_MESSAGE;
+        return WordConstants.HELP_MESSAGE;
     }
 
     @RequestMapping(value = "**/word/{value}", method = RequestMethod.GET)
@@ -57,9 +57,7 @@ public class WordController {
             = {WordException.class})
     protected ResponseEntity<String> handleConflict(
             RuntimeException ex, WebRequest request) {
-
-
-        return new ResponseEntity<String>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
 
     }
 

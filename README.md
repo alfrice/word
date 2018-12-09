@@ -18,6 +18,7 @@ open [http://localhost:8080](http://localhost:8080) in a browser
 ### Prerequisites
 
 * port 8080 not in use
+* Java 8+
 
 If you would like to build and run: 
 
@@ -48,7 +49,7 @@ open [http://localhost:8080](http://localhost:8080) in a browser
 
 ## Authors
 
-* **Alice Martin** - [Alfrice](https://github.com/Alfrice)
+* **Alice Martin** - [Alfrice](https://github.com/Alfrice/word)
 
 
 

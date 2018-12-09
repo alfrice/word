@@ -39,14 +39,14 @@ public class NumberCharacterizer implements Serializable {
     /**
      * characterizes a number as to type (Negative, Floating Point, etc) and maps values into chunks for processing
      *
-     * @param strNum a string that may containt several characters
+     * @param strNum a string that may contain several characters
      */
     private void characterize(String strNum) {
 
-        negative = strNum.startsWith("-") ? true : negative;
+        negative = strNum.startsWith("-") || negative;
         String cleanedNumber = clean(strNum);
         if (parseable) {
-            floatingPoint = cleanedNumber.contains(".") ? true : false;
+            floatingPoint = cleanedNumber.contains(".");
             if (floatingPoint) {
                 String[] parts = cleanedNumber.split("\\.");
                 if (parts.length == 2) {
@@ -95,8 +95,7 @@ public class NumberCharacterizer implements Serializable {
 
     /**
      * Takes a string and validates for number format, removes commas and other non usable data
-     *
-     * @param stringNumber
+     * @param stringNumber a String that potentially represents a number
      * @return the number if parseable or {@link NumberCharacterizer#errorMessage}
      */
     String clean(String stringNumber) {
