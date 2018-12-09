@@ -3,6 +3,9 @@
 
 Simple rest service that converts property formatted numbers into a phrase.
 
+[![DepShield Badge](https://depshield.sonatype.org/badges/alfrice/word/depshield.svg)](https://depshield.github.io)
+
+
 ## Getting Started
 From the command line:<br>
 On the command line, from the home directory
