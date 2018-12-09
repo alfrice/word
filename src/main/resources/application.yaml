@@ -1,0 +1,9 @@
+logging:
+  config: classpath:log4j2.xml
+spring:
+  application:
+    name: 'word'
+
+
+cache:
+  size: "9000"

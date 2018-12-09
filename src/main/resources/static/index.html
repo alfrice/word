@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>word Application</title>
+</head>
+
+<body onload="init()">
+<b>Words to numbers rest api</b>
+<p id="demo"></p>
+<ul>
+    <li>GET/word/{number}
+        <ul>
+            <li>Endpoint (GET):
+                <a href='http://localhost:8080/word/20,000'>http://localhost:8080/word/20,000</a><br/>
+            </li>
+            <li>
+                <b>Input format:</b>  commas, negative signs and dots, Java-style scientific and standard, other special characters will fail.
+            </li>
+            <li><b>Number examples:</b> 20,000, 4.25e25, 0.76, .8888, 7.725</li>
+        </ul>
+
+    </li>
+
+    <li>GET/words/{array}
+        <ul>
+            <li>Endpoint (GET):
+                <a href='http://localhost:8080/words/20000,4.728e12,.77'>http://localhost:8080/words/20000,4.728e12</a><br/>
+            </li>
+            <li>
+                <b>Input format:</b> negative signs and dots, Java-style scientific and standard, other special characters will fail. (no commas within numbers.
+            </li>
+            <li><b>Number examples:</b> 20000, 4.25e25, 0.76, .8888, 7.725</li>
+        </ul>
+
+    </li>
+
+    In either case, at some point past Trevigintillion, the service will not process the number and you will get an error message.
+
+    Try it:
+
+    <form id='single'>
+        <div>
+            <label >GET/word/{number}</label>
+            <input id='sn' name='sn' value='50,000'>
+            <button type="button" onclick="getWord('word', true)">Click Me!</button>
+        </div>
+
+    </form>
+
+    <form id='muliple'>
+        <div>
+            <label >GET/words/{array}</label>
+            <input id='mn' name='mn' value='50000, 12.7'>
+            <button type="button" onclick="getWord('words', false)">Click Me!</button>
+        </div>
+
+    </form>
+    <p/>
+    <p id="result" ></p>
+
+
+
+</ul>
+<script>
+
+    var singleResultElement;
+    function init(){
+        singleResultElement = document.getElementById('result')
+    }
+    function getWord(path, single){
+        var request = new XMLHttpRequest();
+    singleResultElement.innerText='processing';
+
+    var theId = single?'sn':'mn';
+
+        var str = document.getElementById(theId).value;
+        var url = 'http://localhost:8080/'+path+'/'+str;
+
+        request.open('GET', url, true);
+        request.onload = function() {
+
+            showMessage(request.response, request.status===200);
+
+        };
+
+        request.onerror=function(ev){
+            console.log("ferom error: "+ev);
+            showMessage(ev, false);
+        }
+        request.send();
+
+
+
+    }
+
+    function showMessage(message, good){
+
+        var html = '<br/><span style="color:green"> RESULT: </span><br/>'
+        if (!good) {
+            html = '<br/><span style="color:red"> ERROR: </span><br/>';
+        }
+            singleResultElement.innerHTML =html + message;
+
+
+    }
+
+
+
+</script>
+</body>
+
+
+</html>
